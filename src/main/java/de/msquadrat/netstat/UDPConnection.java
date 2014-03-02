@@ -2,23 +2,19 @@ package de.msquadrat.netstat;
 
 public class UDPConnection extends Connection {
     
-    class Builder extends Connection.Builder {
-        public Builder() {
-            this.state = ConnectionState.ESTABLISHED;
+    static class Parser extends Connection.Parser {
+        public Parser(String line) {
+            super(line);
         }
         
         @Override
-        public Connection build() {
+        public Connection finish() {
             return new UDPConnection(this);
         }
     }
     
-    static UDPConnection fromLine(String line) {
-        throw new UnsupportedOperationException();
-    }
-    
-    private UDPConnection(Builder builder) {
-        super(builder);
+    private UDPConnection(Parser parser) {
+        super(parser);
     }
 
     @Override

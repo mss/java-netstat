@@ -1,25 +1,21 @@
 package de.msquadrat.netstat;
 
 public class TCPConnection extends Connection {
-    class Builder extends Connection.Builder {
+    
+    static class Parser extends Connection.Parser {
         
-        public Builder state(ConnectionState state) {
-            this.state = state;
-            return this;
+        public Parser(String line) {
+            super(line);
         }
 
         @Override
-        public Connection build() {
+        public Connection finish() {
             return new TCPConnection(this);
         }
     }
     
-    static TCPConnection fromLine(String line) {
-        throw new UnsupportedOperationException();
-    }
-    
-    private TCPConnection(Builder builder) {
-        super(builder);
+    private TCPConnection(Parser parser) {
+        super(parser);
     }
 
     @Override

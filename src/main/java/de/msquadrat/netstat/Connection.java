@@ -16,7 +16,7 @@ public abstract class Connection {
     protected final ConnectionState state;
     
     
-    abstract class Builder {
+    static abstract class Parser {
         protected ProtocolFamily protocolFamily;
         protected InetAddress localAddress;
         protected int localPort;
@@ -24,53 +24,32 @@ public abstract class Connection {
         protected int remotePort;
         protected ConnectionState state;
         
-        public Builder protocolFamily(ProtocolFamily protocolFamily) {
-            this.protocolFamily = protocolFamily;
-            return this;
+        protected Parser(String line) {
+            throw new UnsupportedOperationException("Not implemented");
         }
         
-        public Builder localAddress(InetAddress localAddress) {
-            this.localAddress = localAddress;
-            return this;
+        static Connection fromLine(ConnectionType type, String line) {
+            switch (type) {
+            case TCP:
+                return new TCPConnection.Parser(line).finish();
+            case UDP:
+                return new UDPConnection.Parser(line).finish();
+            default:
+                throw new IllegalArgumentException(type + " is no a valid source type");
+            }
         }
         
-        public Builder localPort(int localPort) {
-            this.localPort = localPort;
-            return this;
-        }
-        
-        public Builder remoteAddress(InetAddress remoteAddress) {
-            this.remoteAddress = remoteAddress;
-            return this;
-        }
-        
-        public Builder remotePort(int remotePort) {
-            this.remotePort = remotePort;
-            return this;
-        }
-        
-        public abstract Connection build();
-    }
-    
-    static Connection fromLine(ConnectionType type, String line) {
-        switch (type) {
-        case TCP:
-            return TCPConnection.fromLine(line);
-        case UDP:
-            return UDPConnection.fromLine(line);
-        default:
-            throw new IllegalArgumentException(type + " is no a valid source type");
-        }
+        public abstract Connection finish();
     }
 
     
-    protected Connection(Builder builder) {
-        this.protocolFamily = builder.protocolFamily;
-        this.localAddress = builder.localAddress;
-        this.localPort = builder.localPort;
-        this.remoteAddress = builder.remoteAddress;
-        this.remotePort = builder.remotePort;
-        this.state = builder.state;
+    protected Connection(Parser parser) {
+        this.protocolFamily = parser.protocolFamily;
+        this.localAddress = parser.localAddress;
+        this.localPort = parser.localPort;
+        this.remoteAddress = parser.remoteAddress;
+        this.remotePort = parser.remotePort;
+        this.state = parser.state;
     }
     
    

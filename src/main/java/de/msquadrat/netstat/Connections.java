@@ -62,7 +62,7 @@ public class Connections implements Iterable<Connection> {
             in.readLine();
             // Parse each line
             for (String line = in.readLine(); line != null; line = in.readLine()) {
-                Connection conn = Connection.fromLine(type, line);
+                Connection conn = Connection.Parser.fromLine(type, line);
                 boolean added = result.add(conn);
                 assert added : "Connection " + conn + "found twice";
             }
