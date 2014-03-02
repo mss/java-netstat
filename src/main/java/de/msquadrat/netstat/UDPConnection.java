@@ -27,7 +27,7 @@ public class UDPConnection extends Connection {
         /* The kernel (currently?) encodes listening UDP sockets as 
          * CLOSEd.
          */
-        switch (state) {
+        switch (getState()) {
         case LISTEN:
         case CLOSE:
             return true;

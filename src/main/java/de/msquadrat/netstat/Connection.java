@@ -176,7 +176,7 @@ public abstract class Connection {
     }
     
     public boolean isListening() {
-        return state == ConnectionState.LISTEN;
+        return getState() == ConnectionState.LISTEN;
     }
     
     @Override
