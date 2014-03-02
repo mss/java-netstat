@@ -59,17 +59,32 @@ public class Connections implements Iterable<Connection> {
                 (type == ConnectionType.TCP ? "tcp" : "udp") + (protocolFamily == StandardProtocolFamily.INET6 ? "6" : ""));
         try (BufferedReader in = Files.newBufferedReader(path, StandardCharsets.US_ASCII)) {
             // Throw away first line (column headings)
-            in.readLine();
+            String line = in.readLine();
+            if (line == null) {
+                throw new IOException("Empty file");
+            }
+            assert line.contains(" sl ") : "Malformed header line '" + line + "'";
+            
             // Parse each line
-            for (String line = in.readLine(); line != null; line = in.readLine()) {
-                Connection conn = Connection.Parser.fromLine(type, line);
+            for (line = in.readLine(); line != null; line = in.readLine()) {
+                Connection conn;
+                switch (type) {
+                case TCP:
+                    conn = new TCPConnection.Parser(line).finish();
+                    break;
+                case UDP:
+                    conn = new UDPConnection.Parser(line).finish();
+                    break;
+                default:
+                    throw new IllegalArgumentException(type + " is no a valid source type");
+                }
                 boolean added = result.add(conn);
                 assert added : "Connection " + conn + "found twice";
             }
         }
-        catch (IOException e) {
+        catch (Exception | AssertionError e) {
             // Can't happen
-            throw new IllegalStateException("Unexpectedly failed to read " + path.toString() + ": " + e.getMessage(), e);
+            throw new IllegalStateException("Failed to read " + path.toString() + ": " + e.getMessage(), e);
         }
 
         return result;
@@ -79,6 +94,18 @@ public class Connections implements Iterable<Connection> {
     @Override
     public Iterator<Connection> iterator() {
         return connections.iterator();
+    }
+    
+    @Override
+    public String toString() {
+        StringBuffer buf = new StringBuffer(connections.size() * 80);
+        for (Connection c : connections) {
+            buf.append(c.getConnectionType());
+            buf.append(' ');
+            buf.append(c.toString());
+            buf.append('\n');
+        }
+        return buf.toString();
     }
 
 }
