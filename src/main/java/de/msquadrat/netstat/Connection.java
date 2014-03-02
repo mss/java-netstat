@@ -175,6 +175,10 @@ public abstract class Connection {
         return state;
     }
     
+    public boolean isListening() {
+        return state == ConnectionState.LISTEN;
+    }
+    
     @Override
     public String toString() {
         Formatter f = new Formatter(Locale.US);
