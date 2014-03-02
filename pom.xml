@@ -12,12 +12,28 @@
 
     <name>Linux Netstat Library</name>
     <inceptionYear>2014</inceptionYear>
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
     <developers>
         <developer>
             <name>Malte S. Stretz</name>
             <url>http://msquadrat.de</url>
         </developer>
     </developers>
+    <scm>
+        <url>https://github.com/mss/java-netstat</url>
+        <connection>scm:git:https://github.com/mss/java-netstat.git</connection>
+        <developerConnection>scm:git:git@github.com:mss/java-netstat.git</developerConnection>
+    </scm>
+    <issueManagement>
+        <url>https://github.com/mss/java-netstat/issues</url>
+        <system>GitHub Issues</system>
+    </issueManagement>
 
     <properties>
         <commons-lang3.version>3.2.1</commons-lang3.version>
