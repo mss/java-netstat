@@ -15,6 +15,7 @@ import java.util.Set;
 
 public class Connections implements Iterable<Connection> {
     private static final int INITIAL_CAPACITY = 16;
+    private static final String PROC_NET_PATH = "/proc/net";
     
     private final Set<Connection> connections;
     
@@ -55,7 +56,7 @@ public class Connections implements Iterable<Connection> {
             return result;
         }
         
-        Path path = Paths.get("/proc/net",
+        Path path = Paths.get(PROC_NET_PATH,
                 (type == ConnectionType.TCP ? "tcp" : "udp") + (protocolFamily == StandardProtocolFamily.INET6 ? "6" : ""));
         try (BufferedReader in = Files.newBufferedReader(path, StandardCharsets.US_ASCII)) {
             // Throw away first line (column headings)
