@@ -46,7 +46,10 @@ public class Connections implements Iterable<Connection> {
             throw new IllegalArgumentException("protocolFamily must be INET or INET6, not " + protocolFamily.toString());
         }
         
-        if (type == null || type == ConnectionType.ANY) {
+        if (type == null) {
+            type = ConnectionType.ANY;
+        }
+        if (type == ConnectionType.ANY) {
             result.addAll(load(protocolFamily, ConnectionType.TCP));
             result.addAll(load(protocolFamily, ConnectionType.UDP));
             return result;
