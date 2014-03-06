@@ -36,12 +36,13 @@ public class Connections implements Iterable<Connection> {
         connections = Collections.unmodifiableSet(load(protocolFamily, type));
     }
     
-    private String getProcNetFile(ProtocolFamily protocolFamily, ConnectionType type) {
+    private String getProcNetFile(StandardProtocolFamily protocolFamily, ConnectionType type) {
         return type.toString().toLowerCase(Locale.US) 
                 + (protocolFamily == StandardProtocolFamily.INET6 ? "6" : "");
     }
     
-    private Path getProcNetPath(ProtocolFamily protocolFamily, ConnectionType type) {
+    private Path getProcNetPath(StandardProtocolFamily protocolFamily, ConnectionType type) {
+        assert type != ConnectionType.ANY : "type must not be ANY";
         return Paths.get(PROC_NET_PATH, getProcNetFile(protocolFamily, type));
     }
     
@@ -66,7 +67,7 @@ public class Connections implements Iterable<Connection> {
             return result;
         }
         
-        Path path = getProcNetPath(protocolFamily, type);
+        Path path = getProcNetPath((StandardProtocolFamily)protocolFamily, type);
         try (BufferedReader in = Files.newBufferedReader(path, StandardCharsets.US_ASCII)) {
             // Throw away first line (column headings)
             String line = in.readLine();
