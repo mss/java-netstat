@@ -81,10 +81,10 @@ public class Connections implements Iterable<Connection> {
                 Connection conn;
                 switch (type) {
                 case TCP:
-                    conn = new TCPConnection.Parser(line).finish();
+                    conn = new TCPConnection.Parser(protocolFamily, line).finish();
                     break;
                 case UDP:
-                    conn = new UDPConnection.Parser(line).finish();
+                    conn = new UDPConnection.Parser(protocolFamily, line).finish();
                     break;
                 default:
                     throw new IllegalArgumentException(type + " is no a valid source type");

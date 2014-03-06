@@ -1,11 +1,13 @@
 package de.msquadrat.netstat;
 
+import java.net.ProtocolFamily;
+
 public class TCPConnection extends Connection {
     
     static class Parser extends Connection.Parser {
         
-        public Parser(String line) {
-            super(line);
+        public Parser(ProtocolFamily protocolFamily, String line) {
+            super(protocolFamily, line);
         }
 
         @Override

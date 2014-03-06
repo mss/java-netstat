@@ -37,7 +37,9 @@ public abstract class Connection {
         protected int remotePort;
         protected ConnectionState state;
         
-        protected Parser(String line) {
+        protected Parser(ProtocolFamily protocolFamily, String line) {
+            this.protocolFamily = protocolFamily;
+            
             fields = new LinkedList<>(Arrays.asList(line.trim().split("\\s+")));
             assert fields.size() >= 4 : "Malformed line '" + line + "'";
             String field;
