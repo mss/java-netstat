@@ -11,6 +11,7 @@ import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Locale;
 import java.util.Set;
 
 public class Connections implements Iterable<Connection> {
@@ -35,6 +36,15 @@ public class Connections implements Iterable<Connection> {
         connections = Collections.unmodifiableSet(load(protocolFamily, type));
     }
     
+    private String getProcNetFile(ProtocolFamily protocolFamily, ConnectionType type) {
+        return type.toString().toLowerCase(Locale.US) 
+                + (protocolFamily == StandardProtocolFamily.INET6 ? "6" : "");
+    }
+    
+    private Path getProcNetPath(ProtocolFamily protocolFamily, ConnectionType type) {
+        return Paths.get(PROC_NET_PATH, getProcNetFile(protocolFamily, type));
+    }
+    
     private Set<Connection> load(ProtocolFamily protocolFamily, ConnectionType type) {
         Set<Connection> result = new HashSet<Connection>(INITIAL_CAPACITY);
         
@@ -56,8 +66,7 @@ public class Connections implements Iterable<Connection> {
             return result;
         }
         
-        Path path = Paths.get(PROC_NET_PATH,
-                (type == ConnectionType.TCP ? "tcp" : "udp") + (protocolFamily == StandardProtocolFamily.INET6 ? "6" : ""));
+        Path path = getProcNetPath(protocolFamily, type);
         try (BufferedReader in = Files.newBufferedReader(path, StandardCharsets.US_ASCII)) {
             // Throw away first line (column headings)
             String line = in.readLine();
@@ -95,6 +104,10 @@ public class Connections implements Iterable<Connection> {
     @Override
     public Iterator<Connection> iterator() {
         return connections.iterator();
+    }
+    
+    public int size() {
+        return connections.size();
     }
     
     @Override
